@@ -3,7 +3,7 @@
     <parent>
         <artifactId>lutece-global-pom</artifactId>
         <groupId>fr.paris.lutece.tools</groupId>
-        <version>6.1.0</version>
+        <version>8.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -26,30 +26,19 @@
         <dependency>
             <groupId>fr.paris.lutece</groupId>
             <artifactId>lutece-core</artifactId>
-            <version>[7.0.0,)</version>
+            <version>[8.0.0-SNAPSHOT,)</version>
             <type>lutece-core</type>
         </dependency>
-
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
-            <artifactId>plugin-rest</artifactId>
-            <version>[3.1.1,)</version>
-            <type>lutece-plugin</type>
+            <artifactId>library-lutece-unit-testing</artifactId>
+            <version>${library-lutece-unit-testing.version}</version>
+            <scope>test</scope>
         </dependency>
-    
-        <dependency>
-            <groupId>fr.paris.lutece.plugins</groupId>
-            <artifactId>module-extend-rating</artifactId>
-            <version>[1.1.6,)</version>
-            <type>lutece-plugin</type>
-        </dependency>
-
     </dependencies>
 
     <properties>
         <componentName>example</componentName>
-        <jiraProjectName>EXAMPLE</jiraProjectName>
-        <jiraComponentId></jiraComponentId>
     </properties>
 
     <scm>
