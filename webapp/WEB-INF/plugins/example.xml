@@ -35,7 +35,7 @@
     <applications>
         <application>
             <application-id>project</application-id>
-            <application-class>fr.paris.lutece.plugins.example.web.ProjectXPage</application-class>
+            <!--<application-class>fr.paris.lutece.plugins.example.web.ProjectXPage</application-class>-->
         </application>
     </applications>
 
