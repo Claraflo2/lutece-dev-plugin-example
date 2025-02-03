@@ -35,7 +35,7 @@ package fr.paris.lutece.plugins.example.web;
 
 import fr.paris.lutece.plugins.example.business.Project;
 import fr.paris.lutece.plugins.example.business.ProjectHome;
-//import fr.paris.lutece.plugins.example.service.ProjectCacheService;
+import fr.paris.lutece.plugins.example.service.ProjectCacheService;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
@@ -46,10 +46,14 @@ import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.message.SiteMessage;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 
+import fr.paris.lutece.portal.service.cache.Lutece107Cache;
+import fr.paris.lutece.portal.service.cache.LuteceCache;
+
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
+import jakarta.inject.Inject;
 
 /**
  * This class provides the user interface to manage Project xpages ( manage, create, modify, remove )
@@ -98,6 +102,11 @@ public class ProjectXPage extends MVCApplication
     private static final String INFO_PROJECT_UPDATED = "example.info.project.updated";
     private static final String INFO_PROJECT_REMOVED = "example.info.project.removed";
 
+    @Inject
+    @LuteceCache(cacheName = "projectCacheService", keyType = String.class, valueType = Project.class, enable = true)
+    Lutece107Cache<String, Project> projectCacheService;
+
+
     // Session variable to store working values
     private Project _project;
 
@@ -106,6 +115,7 @@ public class ProjectXPage extends MVCApplication
     {
         _project = null;
         Map<String, Object> model = getModel( );
+
         model.put( MARK_PROJECT_LIST, ProjectHome.getProjectsList( ) );
 
         return getXPage( TEMPLATE_MANAGE_PROJECTS, getLocale( request ), model );
@@ -233,6 +243,7 @@ public class ProjectXPage extends MVCApplication
         }
 
         ProjectHome.update( _project );
+        projectCacheService.replace( String.valueOf( _project.getId( ) ), _project);
         addInfo( INFO_PROJECT_UPDATED, getLocale( request ) );
 
         return redirectView( request, VIEW_MANAGE_PROJECTS );
@@ -251,8 +262,16 @@ public class ProjectXPage extends MVCApplication
 
         if ( _project == null  || ( _project.getId( ) != nId ))
         {
-            //_project =  ProjectCacheService.getInstance().getResource(String.valueOf(nId), null);
-            _project = ProjectHome.findByPrimaryKey( nId );
+
+            if(projectCacheService.containsKey( String.valueOf(nId) )) 
+            {
+                _project = projectCacheService.get( String.valueOf(nId) );
+            }
+            else 
+            {
+                _project = ProjectHome.findByPrimaryKey( nId );
+                projectCacheService.put( String.valueOf(nId), _project );
+            }
         }
 
         Map<String, Object> model = getModel(  );
