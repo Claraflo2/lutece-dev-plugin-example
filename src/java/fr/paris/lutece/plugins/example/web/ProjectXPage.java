@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.example.web;
 
 import fr.paris.lutece.plugins.example.business.Project;
 import fr.paris.lutece.plugins.example.business.ProjectHome;
-import fr.paris.lutece.plugins.example.service.ProjectCacheService;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
@@ -48,6 +47,8 @@ import fr.paris.lutece.portal.service.message.SiteMessageException;
 
 import fr.paris.lutece.portal.service.cache.Lutece107Cache;
 import fr.paris.lutece.portal.service.cache.LuteceCache;
+
+import fr.paris.lutece.portal.web.resource.ExtendableResourcePluginActionManager;
 
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;

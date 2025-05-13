@@ -60,13 +60,21 @@ import fr.paris.lutece.plugins.rest.service.LuteceRestApplication;
 import fr.paris.lutece.plugins.rest.util.json.JSONUtil;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 
+import fr.paris.lutece.plugins.example.business.ExtendedProject;
+import fr.paris.lutece.plugins.extend.modules.hit.business.Hit;
+import fr.paris.lutece.plugins.extend.modules.hit.service.HitService;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.core.Application;
+import jakarta.inject.Inject;
 
 @RequestScoped
 @Path( RestConstants.BASE_PATH + "example" )
 public class ProjectRest
 {
+    @Inject
+    private HitService _hitService;
+
 	private ObjectMapper _mapper = new ObjectMapper();
 	static final Logger LOGGER = LogManager.getLogger( RestConstants.REST_LOGGER );
 
@@ -114,5 +122,54 @@ public class ProjectRest
         {
             return JSONUtil.formatError( "project not found", 1 );
         }
+    }
+
+
+    /**
+     * get project stats
+     * 
+     * @param nId
+     * @return the json file of the project stats
+     * @throws SiteMessageException 
+     */
+    @GET
+    @Path("/projects_stats/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getProjectStatsById( @PathParam("id") int nId ) throws SiteMessageException {
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+                    
+            return mapper.writeValueAsString( getExtendedProject( ProjectHome.findByPrimaryKey(nId) ) );
+            
+        } catch (NumberFormatException e) {
+            return JSONUtil.formatError("Invalid project number", 3);
+        } catch (Exception e) {
+            return JSONUtil.formatError("project not found", 1);
+        }
+    }
+
+    /**
+     * get project stats 
+     * 
+     * @param project
+     * @return the extended project
+     */
+    private ExtendedProject getExtendedProject(Project project) {
+
+        String strIdExtendableResource = String.valueOf(project.getId()); // extend resource ID
+        String strExtendableResourceType = Project.PROPERTY_RESOURCE_TYPE; // extend resource type
+
+        // search nb of hits
+        Hit hit = _hitService.findByParameters(strIdExtendableResource, strExtendableResourceType);
+        if (hit == null) {
+            hit = new Hit();
+        }
+        
+        ExtendedProject extProject = (ExtendedProject)project;
+        extProject.setHit(hit);
+        
+        return extProject;
     }
 }

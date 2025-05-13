@@ -42,6 +42,8 @@ import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.util.url.UrlItem;
 
+import fr.paris.lutece.portal.web.resource.ExtendableResourcePluginActionManager;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -247,6 +249,9 @@ public class ProjectJspBean extends PaginatedJspBean<Integer, Project>
 
         Map<String, Object> model = getModel( );
         model.put( MARK_PROJECT, _project );
+
+        // ajout de la gestion du plugin extend
+        ExtendableResourcePluginActionManager.fillModel( request, getUser( ), model, String.valueOf(nId), Project.PROPERTY_RESOURCE_TYPE );
 
         return getPage( PROPERTY_PAGE_TITLE_MODIFY_PROJECT, TEMPLATE_MODIFY_PROJECT, model );
     }

@@ -18,6 +18,18 @@
                     <img class="card-img-top" src="${project.imageUrl}">
                     <div class="card-body">
                         <h5 class="card-title">${project.name}</h5>
+                        <p>
+                            #i18n{example.extend.resource.hitNbLabel} :         
+                            <span class="label label-default">    
+                                @Extender[${project.id},project_resource_type,hit,{show:true,increment:false}]@
+                            </span>
+                        </p>
+                        <p>
+                            #i18n{example.extend.resource.ratingLabel} : 
+                            <span class="label label-default">
+                                @Extender[${project.id},project_resource_type,rating,{show:"vote"}]@
+                            </span>
+                        </p>
                     </div>
                 </a>
             </#list>

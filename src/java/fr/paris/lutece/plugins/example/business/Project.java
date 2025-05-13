@@ -37,15 +37,22 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import fr.paris.lutece.portal.service.i18n.Localizable;
+import fr.paris.lutece.portal.service.resource.IExtendableResource;
+import java.util.Locale;
+
 /**
  * This is the business class for the object Project
  */
-public class Project implements Serializable
+public class Project implements Localizable, IExtendableResource
 {
     private static final long serialVersionUID = 1L;
 
+    public static final String PROPERTY_RESOURCE_TYPE = "Project_resource_type";
+
     // Variables declarations
     private int _nId;
+    private Locale _locale;
 
     @NotEmpty( message = "#i18n{example.validation.project.Name.notEmpty}" )
     @Size( max = 50, message = "#i18n{example.validation.project.Name.size}" )
@@ -176,5 +183,49 @@ public class Project implements Serializable
     public boolean isCostValid( )
     {
         return ( _nCost % 5 == 0  );
+    }
+
+    @Override
+    public void setLocale(Locale locale) {
+        this._locale = locale;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @JsonIgnore
+    public String getIdExtendableResource() {
+        return Integer.toString(_nId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @JsonIgnore
+    public String getExtendableResourceType() {
+        return PROPERTY_RESOURCE_TYPE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @JsonIgnore
+    public String getExtendableResourceName() {
+        return _strName;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getExtendableResourceDescription() {
+        return _strDescription;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getExtendableResourceImageUrl() {
+        return _strImageUrl;
     }
 }
